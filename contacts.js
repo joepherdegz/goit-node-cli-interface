@@ -27,13 +27,13 @@ const getContactById = async (contactId) => {
 const removeContact = async (contactId) => {
     try {
         const contacts = await listContacts();
-        const index = contacts.findIndex((item) => item.id === contactId);
-        if (index === -1) {
-            return null;
-        }
-        const deletedContact = contacts.splice(index, 1);
+        // const index = contacts.findIndex((item) => item.id === contactId);
+        // if (index === -1) {
+        //     return null;
+        // }
+        const updatedContacts = contacts.filter((contact) => contact.id !== contactId );
         await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-        return deletedContact;
+        return updatedContacts;
     } catch (error) {
         console.error("Error removing contact:", error.message);
     }
@@ -48,8 +48,9 @@ const addContact = async ({ name, email, phone }) => {
             email,
             phone,
         };
-        const allContacts = [...contacts, newContact];
-        await fs.writeFile(contactsPath, JSON.stringify(allContacts, null, 2));
+        // const allContacts = [...contacts, newContact];
+        contacts.push(newContact)
+        await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
         return newContact;
     } catch (error) {
         console.error("Error adding contact:", error.message);
